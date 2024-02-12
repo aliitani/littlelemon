@@ -9,14 +9,13 @@
     <div class="row">
       <!--Begin col-->
       <div class="column">
-          {% csrf_token %}
-          <form method="POST" id="form" action="{% url 'restaurant:book' %}">
+          <form method="POST" id="form" onsubmit="submitForm(event)">
+            {% csrf_token %}
           <p>
               <label for="name">Name:</label>
-              <input type="text" placeholder="Your Name" maxlength="200" required="" id="name">
+              <input type="text" placeholder="Your Name" maxlength="200" required id="name">
             </p>
             <p>
-            <!-- Step 9: Part one -->
               <label for="reservation_date">Reservation date:</label>
               <input id="reservation_date" type="date" required>
             </p>
@@ -29,9 +28,9 @@
             </p>
             <p>
               <label for="no_of_guests">No of Guests:</label>
-              <input id="no_of_guests" type="number" required />
+              <input id="no_of_guests" type="number" required value="1" />
             </p>
-            <button type="button" id="button">Reserve</button>
+            <button type="submit" id="button">Reserve</button>
         </form>
       </div>
       <!--End col-->
@@ -39,29 +38,22 @@
       <!--Begin col-->
       <div class="column">
         <h2>Bookings For <span id="today"></span></h2>
-        <div id="bookings">
-        </div>
+        <div id="bookings"></div>
       </div>
       <!--End col-->
     </div>
     <!--End row-->
-
-
-
-
   </article>
 </section>
 <script>
 
   const date = new Date();
-  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const formattedDate = `${date.getUTCFullYear()}-${(date.getUTCMonth() + 1).toString().padStart(2, "0")}-${date.getUTCDate().toString().padStart(2, "0")}`;
   
   document.getElementById('reservation_date').value = formattedDate;
 
   getBookings()
 
-
-  /*  Step 10: Part two */
   function getBookings() {
     let reserved_slots = []
     const date = document.getElementById('reservation_date').value
@@ -73,7 +65,6 @@
         bookings = ''
         const items = data;   
         
-        /* Step 11: Part three */
         if (items.length) {
           for (let item of items) {
             reserved_slots.push(item.reservation_slot)
@@ -81,7 +72,6 @@
           }          
         }
       
-        /* Step 12: Part four  */
         let slot_options = '<option value="0" disabled>Select time</option>';
 
         for (let i = 10; i <= 20; i++) {
@@ -95,7 +85,7 @@
         
         document.getElementById('reservation_slot').innerHTML = slot_options
         if (bookings == '') {
-          bookings = "No bookings"
+          bookings = "<p>No bookings</p>"
         }
         
         document.getElementById('bookings').innerHTML = bookings
@@ -109,34 +99,26 @@
     return label
   }
 
-
-  document.getElementById('button').addEventListener('click', function (e) {
-    const formdata = {
+  function submitForm(e) {
+    e.preventDefault();
+    const formData = {
       name: document.getElementById('name').value,
       reservation_date: document.getElementById('reservation_date').value,
       reservation_slot: document.getElementById('reservation_slot').value,
       no_of_guests: document.getElementById('no_of_guests').value
     }
 
-    fetch("{% url 'littlelemonAPI:bookings-api' %}", { method: 'POST', body: JSON.stringify(formdata) })
-      .then(r => r.text())
+    fetch("{% url 'littlelemonAPI:bookings-api' %}", { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(formData) })
+      .then(response => response.text())
       .then(data => {
         getBookings()
       })
-  });
+  }
 
   document.getElementById('reservation_date').addEventListener('change', function(e) {
     e.preventDefault();
-    console.log('date changed');
     getBookings();
   });
-
-  document.getElementById('form').addEventListener('keydown', function (e) {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    document.getElementById('button').click();
-  }
-});
 
 </script>
 {% endblock %}

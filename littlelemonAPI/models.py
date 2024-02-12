@@ -10,6 +10,9 @@ class Booking(models.Model):
     def __str__(self): 
         return self.name
 
+    class Meta:
+        unique_together = ('reservation_date', 'reservation_slot')
+        
 class Menu(models.Model):
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)

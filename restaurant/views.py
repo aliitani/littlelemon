@@ -1,40 +1,22 @@
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.views import View
-from django.http import Http404, HttpResponse
+from django.http import Http404
 
-from datetime import datetime
 import json
 
 from littlelemonAPI.serializers  import BookingSerializer, MenuItemSerializer
 from littlelemonAPI.models import Booking, Menu as MenuModel
 
-from .forms import BookingForm
-
 # Create your views here.
 def home(request):
-    return render(request, 'index.html');
+    return render(request, 'index.html')
 
 def about(request):
     return render(request, 'about.html')
 
-class Book(View):
-    template_name = 'book.html'
-
-    def post(self, request):
-        form = BookingForm(request.POST)
-        print(form.data)
-        return HttpResponse('content')
-    
-    def get(self, request):
-        bookings = Booking.objects.all()
-        booking_serializer = BookingSerializer(data=bookings.values(), many=True)
-        booking_serializer.is_valid()
-        
-        form = BookingForm()
-        return render(request, self.template_name, {'form': form, 'bookings': booking_serializer.data, 'bookingDate': datetime.now().date()})
-    
-        
+def book(request):
+    return render(request, 'book.html')
 
 class Reservation(View):
     template_name = 'reservations.html'
