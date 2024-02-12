@@ -19,5 +19,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('restaurant/', include('restaurant.urls'))
+    path('', include('restaurant.urls')),
+    path('api/', include('littlelemonAPI.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/registration/', include('djoser.urls.authtoken'))
 ]
