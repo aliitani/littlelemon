@@ -2,13 +2,15 @@
 I am using the "djoser" library so the authentication and registration endpoints are provided by the djoser library.
 
 # Endpoints and APIs TO TEST:
+/menu/
+/menu-item/<int:pk>
+/book/
+/reservations/
 
-# TO BROWSE THE MENU AND MAKE RESERVATIONS AND CHECK BOOKINGS
-/restaurant/menu/
-/restaurant/menu-item/<int:pk>
-/restaurant/book/
-/restaurant/bookings/
-/restaurant/reservations/
+# APIs
+/api/bookings
+/api/menu
+/api/menu-item/<int:pk>
 
 # USER REGISTRATION - Using Browsable API, Postman or Insomnia
 /auth/users/ 
